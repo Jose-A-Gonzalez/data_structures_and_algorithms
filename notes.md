@@ -532,6 +532,43 @@ If the number at the inner loop index is smaller than the number at smallest_idx
 Swap the number at the outer loop index with the number at smallest_idx
 Return the sorted list
 
+# Exponential Time
+
+## Polynomial vs Exponential 
+Broadly speaking, algorithms can be classified into two categories:
+
+"Polynomial time"
+"Exponential time"
+
+![alt text](image-10.png)
+
+Technically O(n!) is "factorial" time, but let's lump them together for simplicity
+
+An algorithm runs in "Polynomial time" if its runtime does not grow faster than n^k, where k is any constant (e.g. n^2, n^3, etc) and n is the size of the input. Polynomial-time algorithms can be useful if they're not too slow.
+
+In comparison, exponential-time algorithms are almost always too slow to be practical. (However, sometimes you're trying to force someone to be slow, like in the case of cryptography and security). Even when n is as low as 20, 2^n is already over a million!
+
+![alt text](image-11.png)
 
 
+## Polynomial Time = P
+Back in the 1970s, some computer scientists wanted to come up with a good, descriptive name for the set of polynomial time algorithms. After much deliberation, they settled on the letter P (naming things is hard).
 
+The hand-wavy takeaway is that:
+
+Problems that fall into class P are practical to solve on computers.
+Problems that don't fall into P are hard, slow, and impractical.
+
+We can "reduce"  not class P into a class P and viceversa.
+
+## Order K^N – Exponential
+
+O(K^N) – where K represents a constant branching factor, e.g. 3^N – is the first Big O class that we've dealt with that falls into the scary exponential category of algorithms.
+
+Algorithms that grow at an exponential rate become impossible to compute after so little scale-up that they're usually almost worthless in practicality.
+
+
+## Big O Categories Review
+
+![alt text](image-12.png)
+![alt text](image-13.png)
