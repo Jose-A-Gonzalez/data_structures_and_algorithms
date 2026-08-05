@@ -625,3 +625,46 @@ In other words, lists start to struggle in two primary areas:
 
 When you need to frequently delete elements from the middle of the list
 When you need to frequently search for specific elements in the entire list
+
+# Stacks
+
+A stack is a data structure that stores ordered items. It's like a list, but its design is more restrictive. It only allows items to be added or removed from the top of the stack(imagine a tower made of pancakes, if you were to add or to eat one, it will always be from the top):
+
+It's called a "stack" because it behaves just like a stack of physical items. Imagine a stack of plates: it's easy to take an item off the top of the stack, but you can't really get to the items in the middle or at the bottom without removing the items on top first. You'll often hear a stack referred to as a LIFO (last in, first out) data structure.
+
+Whoever decided to take this simple concept and slap a nasty acronym on it should be forced to program in Prolog for the rest of their days.
+
+## Stack Speed
+You might be wondering, "why would I use a stack instead of a list?" or "Isn't this just a list with fewer features?"
+
+And you'd be right! A stack is a list with fewer features, but that's the point. By restricting the ways we can interact with the data, we guarantee that certain operations are blazingly fast. Here are all the operations a typical stack supports, along with their Big O time complexity:
+
+![alt text](image-14.png)
+
+
+It's all O(1)! That means no matter how many items are in the stack, these operations will always take the same amount of time. Stacks are really fast and are usually the best choice when the behavior of a stack is all you need.
+
+## Eg. code
+
+from typing import Any
+
+
+class Stack:
+    def __init__(self) -> None:
+        self.items: list[Any] = []
+
+    def push(self, item: Any) -> None:
+        self.items.append(item)
+
+    def size(self) -> int:
+        return len(self.items)
+
+    def peek(self) -> Any:
+        if self.size() == 0:
+            return None
+        return self.items[-1]
+
+    def pop(self) -> Any:
+        if self.size() == 0:
+            return None
+        return self.items.pop()
