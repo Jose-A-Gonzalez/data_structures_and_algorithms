@@ -668,3 +668,37 @@ class Stack:
         if self.size() == 0:
             return None
         return self.items.pop()
+
+# Chapter 8: Queue
+
+## What is a Queue?
+
+
+A queue stores ordered items... again, kind of like a list, but again, like a stack, its design is more restrictive. A queue only allows items to be added to the tail of the queue and removed from the head of the queue.
+
+![alt text](image-15.png)
+
+The first person to get in line is also the first person to be served (get out of line). So, you'll often hear a queue referred to as a FIFO (first in, first out) data structure.
+
+Interchangeable terms on Queues:
+
+![alt text](image-16.png)
+
+## Queue Speed
+So how fast are queue operations? Well, in an optimized queue, they'd be:
+
+![alt text](image-18.png)
+
+Just like a stack, all operations are O(1)! No matter how many items are in the queue, these operations will always take the same amount of time. The reason to choose a queue over a stack is all about ordering. Queues should be used when you need to process items in the order they were added.
+
+LIFO (stack) vs FIFO (queue).
+
+A Problem
+Our current Queue class has a problem... take a look at the push method:
+
+def push(self, item: str) -> None:
+    self.items.insert(0, item)
+
+It's not O(1)! The List's insert method has to shift all the other items in the list down to make room for the new item.
+
+![alt text](image-17.png)
