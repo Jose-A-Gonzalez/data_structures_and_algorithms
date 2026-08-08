@@ -702,3 +702,186 @@ def push(self, item: str) -> None:
 It's not O(1)! The List's insert method has to shift all the other items in the list down to make room for the new item.
 
 ![alt text](image-17.png)
+
+# Linked Lists
+
+
+Remember how the push method on our Queue is O(n) instead of O(1)?
+
+    def push(self, item: str) -> None:
+        # everything in self.items has to shift
+        # up a position, which takes O(n) time
+        self.items.insert(0, item)
+
+Let's fix that.
+
+To build a faster queue, we'll use a Linked List instead of a regular List (array) under the hood. A linked list is where elements are not stored next to each other in memory, instead, each item references the next in a chain.
+
+![alt text](image-19.png)
+
+Nodes
+Our nodes will be represented by a simple class with two fields:
+
+val - The raw string value that the node holds (e.g. 'Carla', 'James', etc)
+next - A reference to the next node in the list
+
+eg. code:
+
+    from typing import Any
+
+
+    class Node:
+        val: Any
+
+        def __init__(self, val: Any) -> None:
+            self.val = val
+            self.next = None
+
+        def set_next(self, node: "Node") -> None:
+            self.next = node
+
+        # don't touch below this line
+
+        def __repr__(self) -> str:
+            return self.val
+
+## Linked List vs. List
+A linked list is a collection of ordered items, so it's similar to a "normal" list (also called an "array" or "slice" in other languages).
+
+![alt text](image-20.png)
+
+Items in a "normal" list are stored next to each other in memory, and to get an item from a normal List we have to use a numbered index:
+
+    car = cars[3]
+
+You can think of the "index" as simply an offset from the start. The cars list in this example refers to the start of the list, and 3 is just the 4th item in that section of memory. With a normal list, all the data is stored in the same place in memory and the index is just a way to find the right spot.
+
+In a linked list, there are no indexes! Each node contains two things: the data itself, and a reference to the next node in the list. Iterating over a linked list requires starting at the head node and following the next references until you reach the end.
+
+    current_car_node = head_car_node
+    while current_car_node is not None:
+        print(current_car_node.val)
+        current_car_node = current_car_node.next
+
+Frankly, linked lists can be annoying to use and incur more overhead, so why use a linked list at all? It's because sometimes linked lists are much faster to make updates to, particularly when inserting or deleting items from the middle.
+
+In a normal list, if you insert an item in the middle, you have to shift all the items after it down one spot, which takes O(n) time:
+
+![alt text](image-21.png)
+
+In a linked list, once you've traversed to a given node, insertion is (O(1)) because you can simply update two references:
+
+![alt text](image-22.png) 
+
+## Generators
+Our LinkedList is missing an easy way to loop over its nodes, but before we can build that, you should know about generators.
+
+A generator is an object that produces a sequence of values one at a time, as they're needed.
+
+The yield Keyword
+The yield keyword in Python returns a value, kind of like return. However, it's used to turn the function into a generator function.
+
+Calling a generator function creates a new generator object. When that generator is run, it executes the code in the generator function until it hits a yield statement. Then the generator pauses and returns the yielded value. The next time the generator runs, it picks up where it left off.
+
+    def create_message_generator():
+        yield "hi"
+        yield "there"
+        yield "friend"
+
+
+    gen = create_message_generator()
+    print(next(gen))  # hi
+    print(next(gen))  # there
+    print(next(gen))  # friend
+
+Each call to create_message_generator() creates a new generator instance, and each generator keeps track of where it paused. To keep using the same generator and have it resume, assign it to a variable like gen. Then you can call next() on it repeatedly or loop over it.
+
+Yielding in a Loop
+Hardcoding one yield per value gets old fast. Generators really shine when you yield inside a loop:
+
+    def create_counter():
+        count = 0
+        while True:
+            yield count
+            count += 1
+
+
+    for count in create_counter():
+        print(count)
+        if count == 2:
+            break
+    # 0
+    # 1
+    # 2
+
+The while True may look scary, but it's safe here: the generator pauses at yield in every loop iteration, and it only advances when the caller asks for the next value.
+
+Notice that a standard for loop automatically handles calling next() under the hood.
+
+## Iterating
+
+Even though iterating with linked lists kinda sucks compared to the simplicity of arrays (normal lists), we've got to do it. Although the implementation is more complex and slow, we can still make it easy for users of our class by providing an __iter__ method. If __iter__ is a generator function, Python can use it to drive a for loop over our class.
+
+## Add to Tail
+Time to allow our LinkedList to add new nodes to the end of the list. Kind of like a regular Python List's .append method.
+
+![alt text](image-23.png)
+
+## Eg. Code:
+
+from node import Node
+
+
+class LLQueue:
+    def remove_from_head(self) -> Node | None:
+        if self.head == None:
+            return
+        last = self.head
+        self.head = self.head.next
+        if self.head == None:
+            self.tail = None
+        last.set_next(None)
+        return last
+    # don't touch below this line
+
+    def add_to_tail(self, node: Node) -> None:
+        if self.tail is None:
+            self.head = node
+            self.tail = node
+            return
+        assert self.tail is not None
+        self.tail.set_next(node)
+        self.tail = node
+
+    def __init__(self) -> None:
+        self.tail: Node | None = None
+        self.head: Node | None = None
+
+    def __iter__(self):
+        node = self.head
+        while node is not None:
+            yield node
+            node = node.next
+
+    def __repr__(self) -> str:
+        nodes = []
+        for node in self:
+            nodes.append(node.val)
+        return " <- ".join(nodes)
+
+
+##############################################
+
+from typing import Any
+
+
+class Node:
+    def __init__(self, val: Any) -> None:
+        self.val = val
+        self.next: "Node | None" = None
+
+    def set_next(self, node: "Node | None") -> None:
+        self.next = node
+
+    def __repr__(self) -> str:
+        return self.val
